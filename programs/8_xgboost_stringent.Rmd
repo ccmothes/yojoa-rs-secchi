@@ -107,6 +107,7 @@ val_5 <-fiveDay %>%
   filter(!rowid %in% test_5$rowid) %>%
   filter(!rowid %in% train_5$rowid)
 
+
 ```
 
 ### Local Knowledge Window
@@ -1097,4 +1098,5 @@ feat_importance = xgb.importance(feature_names = band_met51_feats,
 xgb.plot.importance(feat_importance)
 ```
 
-
+To save teh predictions
+write_csv(preds_jd %>% select(date, location, secchi, pred_secchi_jd_51m), "holdout_data_stringent.csv")
