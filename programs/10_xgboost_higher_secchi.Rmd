@@ -270,18 +270,29 @@ grid_train <- expand.grid(
   min_child_weight= c(3,5,7)
 )
 
-hypertune_xgboost = function(train,test, grid){
+hypertune_xgboost = function(train, test, grid){
+  
   params <- list(booster = "gbtree", objective = 'reg:squarederror', 
-                 eta=grid$eta ,max_depth=grid$max_depth, 
+                 eta=grid$eta, max_depth=grid$max_depth, 
                  min_child_weight=grid$min_child_weight,
                  subsample=grid$subsample, 
                  colsample_bytree=grid$colsample_bytree)
+  
+  cb.log <- xgb.cb.evaluation.log()
+  
   xgb.naive <- xgb.train(params = params, data = train, nrounds = 1000, 
-                         watchlist = list(train = train, val = test), 
+                         evals = list(train = train, val = test), 
                          verbose = 0,
-                         early_stopping_rounds = 20)
-  summary <- grid %>% mutate(val_loss = xgb.naive$best_score, best_message = xgb.naive$best_msg,
-                             mod = list(xgb.naive))
+                         early_stopping_rounds = 20,
+                         callbacks = list(cb.log))
+  
+  eval_log <- get("evaluation_log", envir = cb.log$env)
+  val_scores <- sapply(eval_log, function(x) x$metrics["val-rmse"])
+  best_score <- min(val_scores)
+  best_iter <- which.min(val_scores)
+  
+  summary <- grid %>% mutate(val_loss = best_score, best_message = best_iter,
+                             mod = list(xgb.naive)) 
   
   return(summary) 
 }
