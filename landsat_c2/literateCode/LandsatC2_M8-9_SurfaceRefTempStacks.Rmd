@@ -12,7 +12,7 @@ library(sf)
 
 #point to the directory where your location information is stored
 #make sure this path ends with a '/'
-data_dir = 'data'
+data_dir = 'data/landsat_update/'
 ```
 
 ## *Purpose*
@@ -51,16 +51,12 @@ from datetime import date
 dataDir = r.data_dir
 ```
 
-### Authenticate earth engine.
+### Authenticate and Initialize Earth Engine.
 
-At the moment, 'ee.Authenticate()' is not working in Qmd/Rmd, to authenticate manually, go to your command line interpreter or the `zsh` terminal in RStudio (`BASH` terminals will not work) and execute:
-
-`earthengine authenticate`
-
-### Initialize earth engine.
 
 ```{python}
-ee.Initialize()
+#ee.Authenticate()
+ee.Initialize(project='ee-ccmothes')
 ```
 
 ### Load in location data
@@ -91,7 +87,7 @@ proj_folder = 'yojoa'
 As written below, this script will pull all historical Landsat 8 and 9 images. If you wish to focus the script to a shortened time period, you may adjust these. Landsat 8 was deployed in 2013.
 
 ```{r}
-start_date_89 = '2013-01-01'
+start_date_89 = '2018-01-01'
 end_date_89 = as.character(Sys.Date())
 ```
 
