@@ -24,12 +24,14 @@ To create a match up database of the Landsat record and historical Secchi data f
 
 ```{r}
 secchi = read.csv(file.path(is_dir, 'Secchi_completedataset.csv')) %>% 
+  #bind with updated data
+  bind_rows(read.csv(file.path(is_dir, 'Secchi_updates.csv')) %>% mutate(secchi = as.character(secchi))) %>% 
   mutate(date = as.Date(date, format = '%m/%d/%y')) 
 str(secchi)
 #there are duplicated records in here, remove them
 secchi = secchi[!duplicated(secchi),]
 
-ls = read.csv(file.path(coll_dir, 'yojoa_corr_rrs_met_v2023-06-15.csv')) %>% 
+ls = read.csv(file.path(coll_dir, 'yojoa_corr_rrs_met_v2026-03-24.csv')) %>% 
   mutate(date = as.Date(date))  %>% 
   mutate(RN= med_Red_corr/med_Nir_corr,
            BG= med_Blue_corr/med_Green_corr,

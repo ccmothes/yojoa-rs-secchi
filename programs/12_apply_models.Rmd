@@ -25,9 +25,9 @@ This script applies all of the top-performing models to the Landsat stack and ex
 ## Load data
 
 ```{r}
-stack = read.csv(file.path(rs_dir, 'yojoa_corr_rrs_met_scaled_v2023-06-15.csv')) %>% 
-  mutate(secchi = NA_real_) %>% 
-  filter(date < ymd('2023-01-01')) #this is when met data ends
+stack = read.csv(file.path(rs_dir, 'yojoa_corr_rrs_met_scaled_v2026-03-24.csv')) %>% 
+  mutate(secchi = NA_real_) #%>% 
+  #filter(date < ymd('2023-01-01')) #this is when met data ends
 ```
 
 ## Load models and parameters
@@ -35,8 +35,8 @@ stack = read.csv(file.path(rs_dir, 'yojoa_corr_rrs_met_scaled_v2023-06-15.csv'))
 Here, we load the models. 
 
 ```{r}
-load('data/models/optimized_xg_8_jd_51m.RData')
-xg_8_71d_51m = optimized_booster_jd_51m
+load('data/models/optimized_xg_8_5d_71m.RData')
+xg_8_5d_71m = optimized_booster_5d_71m
 load('data/models/optimized_xg_9_5d_71m.RData')
 xg_9_5d_71m = optimized_booster_5d_71m
 load('data/models/optimized_xg_10_5d_3m.RData')
@@ -77,8 +77,8 @@ band_met5_feats_scaled = c('med_Blue_corr_scaled', 'med_Red_corr_scaled', 'med_G
 ### stringent {xgboost}
 
 ```{r}
-model = xg_8_71d_51m
-features = band_met51_feats
+model = xg_8_5d_71m
+features = band_met71_feats
 
 stack_8_xgb <- xgb.DMatrix(data = as.matrix(stack[,features]))
 

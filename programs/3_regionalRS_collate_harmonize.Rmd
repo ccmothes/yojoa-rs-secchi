@@ -20,8 +20,8 @@ library(ggthemes)
 dump_dir = file.path('data/fromDrive/')
 coll_dir = file.path('data/upstreamRS/')
 
-drive_auth()
-1
+#drive_auth()
+
 ```
 
 # Download and collate data and metadata from Drive
@@ -85,7 +85,8 @@ Grab only the metadata we want
 
 ```{r}
 filtered_metadata <- collated_metadata %>% 
-  mutate(IMAGE_QUALITY = if_else(is.na(IMAGE_QUALITY), IMAGE_QUALITY_OLI, IMAGE_QUALITY)) %>% 
+  # removed IMAGE_QUALITY filters, not in Landsat 9 and Collection 2 T1 has already passed quality control
+  #mutate(IMAGE_QUALITY = if_else(is.na(IMAGE_QUALITY), IMAGE_QUALITY_OLI, IMAGE_QUALITY)) %>% 
   select(`system:index`, 
          WRS_PATH, 
          WRS_ROW, 
@@ -93,7 +94,7 @@ filtered_metadata <- collated_metadata %>%
          'date' = DATE_ACQUIRED, 
          'UTC_time' = SCENE_CENTER_TIME, 
          CLOUD_COVER,
-         IMAGE_QUALITY, 
+         IMAGE_QUALITY_OLI, 
          IMAGE_QUALITY_TIRS, 
          SUN_AZIMUTH, 
          SUN_ELEVATION) 
@@ -124,8 +125,8 @@ There are likely other filters you will want to apply, but these are the minimal
 
 ```{r}
 filtered = data %>% 
-  filter(pCount_dswe1 > 10 &
-           IMAGE_QUALITY >= 7)
+  filter(pCount_dswe1 > 10) #&
+           #IMAGE_QUALITY >= 7)
 ```
 
 We are also going to filter to remove any median Rrs values less than -0.01 and greater than 0.2

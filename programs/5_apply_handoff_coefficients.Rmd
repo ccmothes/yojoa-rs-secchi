@@ -19,10 +19,10 @@ This script applies the regional hand-off coefficients to the Yojoa LS stack.
 ## Load files
 
 ```{r}
-handoff = read.csv(file.path(rs_dir, 'yojoa_regional_handoff_coefficients_v2023-03-31.csv')) %>% 
+handoff = read.csv(file.path(rs_dir, 'yojoa_regional_handoff_coefficients_v2026-03-24.csv')) %>% 
   rename(mission = SatCorr)
 
-yojoa_rs = read.csv(file.path(rs_dir, 'Yojoa_LandsatC2_SRST_filtered_v2023-03-31.csv'))
+yojoa_rs = read.csv(file.path(rs_dir, 'Yojoa_LandsatC2_SRST_filtered_v2026-03-23.csv')) # includes 1985-2026
 
 ```
 

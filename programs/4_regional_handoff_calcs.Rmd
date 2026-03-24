@@ -19,6 +19,8 @@ These data were filtered such that dswe1 \>= 10, image quality was \>= 7, and al
 
 ```{r}
 filtered = read.csv('data/upstreamRS/HON_GUAT_ELSAL_regional_LandsatC2_SRST_filtered_v2023-03-31.csv') %>% 
+  #bind with new data
+  bind_rows(read.csv('data/upstreamRS/HON_GUAT_ELSAL_regional_LandsatC2_SRST_filtered_v2026-03-24.csv')) %>% 
   mutate(date = as.Date(date),
          rowid = as.integer(rowid))
 ```

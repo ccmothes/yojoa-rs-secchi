@@ -27,11 +27,14 @@ This script uses stepwise regression as an alternative modeling approach for the
 ## Load data
 
 ```{r}
-match5 = read.csv(file.path(match_dir, 'fiveDay_LS-Secchi_matchups_n237.csv'))
-match71 = read.csv(file.path(match_dir, 'multiDay_LS-Secchi_matchups_n238.csv'))
+# File names updated due to higher number of rows with updated data
+match5 = read.csv(file.path(match_dir, 'fiveDay_LS-Secchi_matchups_n361.csv'))
+match71 = read.csv(file.path(match_dir, 'multiDay_LS-Secchi_matchups_n362.csv'))
 
-stack = read.csv(file.path(rs_dir, 'yojoa_corr_rrs_met_scaled_v2023-06-15.csv'))
+stack = read.csv(file.path(rs_dir, 'yojoa_corr_rrs_met_scaled_v2026-03-24.csv'))
 secchi = read.csv(file.path(is_dir, 'Secchi_completedataset.csv')) %>% 
+  #bind with updated data
+  bind_rows(read.csv(file.path(is_dir, 'Secchi_updates.csv')) %>% mutate(secchi = as.character(secchi))) %>% 
   mutate(secchi = as.numeric(secchi),
          date = mdy(date)) %>% 
   filter(!is.na(secchi)) %>% 
@@ -51,8 +54,8 @@ prepData = function(df) {
 
 match5 = prepData(match5)
 match71 = prepData(match71)
-stack = stack %>% 
-  filter(date < as.Date('2023-01-01'))
+# stack = stack %>% 
+#   filter(date < as.Date('2023-01-01'))
 ```
 
 Make train/test/validation sets
@@ -129,49 +132,56 @@ train.control <- trainControl(method = "cv", number = 5)
 step.model.5d3m <- train(secchi ~ ., data = train_match_5d_3m,
                     method = "leapBackward", 
                     tuneGrid = data.frame(nvmax = 1:13),
-                    trControl = train.control
+                    trControl = train.control,
+                    na.action = na.omit
                     )
 save(step.model.5d3m, file = 'data/models/stepreg_5d_3m.RData')
 
 step.model.5d5m <- train(secchi ~ ., data = train_match_5d_5m,
                     method = "leapBackward", 
                     tuneGrid = data.frame(nvmax = 1:13),
-                    trControl = train.control
+                    trControl = train.control,
+                    na.action = na.omit
                     )
 save(step.model.5d5m, file = 'data/models/stepreg_5d_5m.RData')
 
 step.model.5d51m <- train(secchi ~ ., data = train_match_5d_51m,
                     method = "leapBackward", 
                     tuneGrid = data.frame(nvmax = 1:13),
-                    trControl = train.control
+                    trControl = train.control,
+                    na.action = na.omit
                     )
 save(step.model.5d51m, file = 'data/models/stepreg_5d_51m.RData')
 
 step.model.5d71m <- train(secchi ~ ., data = train_match_5d_71m,
                     method = "leapBackward", 
                     tuneGrid = data.frame(nvmax = 1:13),
-                    trControl = train.control
+                    trControl = train.control,
+                    na.action = na.omit
                     )
 save(step.model.5d71m, file = 'data/models/stepreg_5d_71m.RData')
 
 step.model.71d3m <- train(secchi ~ ., data = train_match_71d_3m,
                     method = "leapBackward", 
                     tuneGrid = data.frame(nvmax = 1:13),
-                    trControl = train.control
+                    trControl = train.control,
+                    na.action = na.omit
                     )
 save(step.model.71d3m, file = 'data/models/stepreg_71d_3m.RData')
 
 step.model.71d5m <- train(secchi ~ ., data = train_match_71d_5m,
                     method = "leapBackward", 
                     tuneGrid = data.frame(nvmax = 1:13),
-                    trControl = train.control
+                    trControl = train.control,
+                    na.action = na.omit
                     )
 save(step.model.71d5m, file = 'data/models/stepreg_71d_5m.RData')
 
 step.model.71d51m <- train(secchi ~ ., data = train_match_71d_51m,
                     method = "leapBackward", 
                     tuneGrid = data.frame(nvmax = 1:13),
-                    trControl = train.control
+                    trControl = train.control,
+                    na.action = na.omit
                     )
 
 save(step.model.71d51m, file = 'data/models/stepreg_71d_51m.RData')
@@ -179,7 +189,8 @@ save(step.model.71d51m, file = 'data/models/stepreg_71d_51m.RData')
 step.model.71d71m <- train(secchi ~ ., data = train_match_71d_71m,
                     method = "leapBackward", 
                     tuneGrid = data.frame(nvmax = 1:13),
-                    trControl = train.control
+                    trControl = train.control,
+                    na.action = na.omit
                     )
 
 save(step.model.71d71m, file = 'data/models/stepreg_71d_71m.RData')
@@ -214,6 +225,8 @@ step.model.71d71m$results
 Looks like the only model to really dig in with is the 5-day window and the 7/1 day window with the 5 day met. Let's look at the hold out data to see what they look like before we go any further. First, the 7/1 day window:
 
 ```{r}
+# there are NAs in test data
+test_match71<- test_match71 %>% drop_na()
 test_match71$predicted = predict.train(step.model.71d5m, test_match71)
 
 ggplot(test_match71, aes(x = secchi, y = predicted)) + 
@@ -258,6 +271,7 @@ test_match71 %>%
 And look at the 5-day window
 
 ```{r}
+test_match5 <- test_match5 %>% drop_na()
 test_match5$predicted = predict.train(step.model.5d5m, test_match5)
 
 ggplot(test_match5, aes(x = secchi, y = predicted)) + 
@@ -420,7 +434,7 @@ ggplot(lake_avg, aes(x = date, y = secchi, color = mission, shape = mission)) +
        color = 'data source', shape = 'data source') +
   theme(legend.position = c(0.8,0.8)) + 
   scale_shape_manual(values = c(19,19,19,19,1)) +
-  scale_x_date(limits = c(as.Date('2018-01-01'), as.Date('2023-01-01')))+
+  scale_x_date(limits = c(as.Date('2018-01-01'), as.Date('2026-01-01')))+
   theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
         plot.subtitle = element_text(hjust = 0.5))
 

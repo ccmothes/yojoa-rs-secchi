@@ -1,6 +1,6 @@
 ---
 title: "xgboost algorithm for Secchi - high data stringency"
-author: "B Steele w/Edits from Matt Ross"
+author: "B Steele w/Edits from Matt Ross and Caitlin Mothes"
 date: "`r Sys.Date()`"
 output: html_document
 editor_options: 
@@ -1024,10 +1024,9 @@ window = '5 day window'
 
 save(optimized_booster_5d_71m, file = 'data/models/optimized_xg_9_5d_71m.RData')
 
-full_stack <- read_csv('data/upstreamRS/yojoa_corr_rrs_met_scaled_v2023-06-15.csv') %>%
+full_stack <- read_csv('data/upstreamRS/yojoa_corr_rrs_met_scaled_v2026-03-24.csv') %>%
   mutate(secchi = 100) %>%
-  prepData(.) %>% 
-  filter(date < ymd('2023-01-01'))
+  prepData(.)
 
 stack_xgb <- xgb.DMatrix(data = as.matrix(full_stack[,features]))
 
@@ -1036,6 +1035,7 @@ full_stack_simp <- full_stack %>%
   select(date, location, secchi, mission) 
 
 situ_stack <- read_csv('data/in-situ/Secchi_completedataset.csv') %>%
+  bind_rows(read_csv('data/in-situ/Secchi_updates.csv') %>% mutate(secchi = as.character(secchi))) %>% 
   mutate(secchi = as.numeric(secchi),
          date = mdy(date)) %>%
   filter(!is.na(secchi)) %>%
