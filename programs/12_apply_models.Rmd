@@ -85,6 +85,9 @@ stack_8_xgb <- xgb.DMatrix(data = as.matrix(stack[,features]))
 stack_8 <- stack %>%
   mutate(est_secchi_stringent = predict(model, stack_8_xgb)) %>%
   select(date, location, est_secchi_stringent, mission) 
+
+# best model overall, save this output
+write.csv(stack_8, "data/landsat_estimations/UPDATED_Yojoa_LS-derived_Secchi_estimates.csv")
 ```
 
 ### very stringent {xgboost}
