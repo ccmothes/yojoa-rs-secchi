@@ -92,7 +92,7 @@ GEE_BAND_MAP = {
     "SR_B7": "Swir2",  # med_Swir2 (used in DSWE/water masking)
 }
 
-OUTPUT_DIR = "secchi_maps"
+OUTPUT_DIR = "secchi_maps_update"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 SCALE = 30  # Landsat resolution
 
