@@ -959,7 +959,7 @@ model = optimized_booster_5d_71m
 met = '7/1 day met summaries'
 window = '5 day window'
 
-save(optimized_booster_jd_51m, file = 'data/models/optimized_xg_8_5d_71m.RData')
+save(optimized_booster_5d_71m, file = 'data/models/optimized_xg_8_5d_71m.RData')
 
 full_stack <- read_csv('data/upstreamRS/yojoa_corr_rrs_met_scaled_v2026-03-24.csv') %>%
   mutate(secchi = 100) %>%
