@@ -105,7 +105,8 @@ Join the data and metadata.
 
 ```{r}
 data = left_join(collated_data, filtered_metadata) %>% 
-  mutate(rowid = as.character(rowid))
+  mutate(rowid = as.character(rowid)) %>%
+  distinct(`system:index`, rowid, .keep_all = TRUE)  # remove duplicate scene-location rows
 
 #clean up workspace
 rm(collated_data, collated_metadata)
