@@ -31,7 +31,7 @@ This script uses stepwise regression as an alternative modeling approach for the
 match5 = read.csv(file.path(match_dir, 'fiveDay_LS-Secchi_matchups_n361.csv'))
 match71 = read.csv(file.path(match_dir, 'multiDay_LS-Secchi_matchups_n362.csv'))
 
-stack = read.csv(file.path(rs_dir, 'yojoa_corr_rrs_met_scaled_v2026-03-24.csv'))
+stack = read.csv(file.path(rs_dir, 'yojoa_corr_rrs_met_scaled_v2026-04-07.csv'))
 secchi = read.csv(file.path(is_dir, 'Secchi_completedataset.csv')) %>% 
   #bind with updated data
   bind_rows(read.csv(file.path(is_dir, 'Secchi_updates.csv')) %>% mutate(secchi = as.character(secchi))) %>% 
@@ -39,6 +39,8 @@ secchi = read.csv(file.path(is_dir, 'Secchi_completedataset.csv')) %>%
          date = mdy(date)) %>% 
   filter(!is.na(secchi)) %>% 
   mutate(location = gsub(' ', '', location))
+#there are duplicated records in here, remove them
+secchi = secchi[!duplicated(secchi),]
 ```
 
 ## Prep data

@@ -31,7 +31,7 @@ str(secchi)
 #there are duplicated records in here, remove them
 secchi = secchi[!duplicated(secchi),]
 
-ls = read.csv(file.path(coll_dir, 'yojoa_corr_rrs_met_v2026-03-24.csv')) %>% 
+ls = read.csv(file.path(coll_dir, 'yojoa_corr_rrs_met_v2026-04-07.csv')) %>% 
   mutate(date = as.Date(date))  %>% 
   mutate(RN= med_Red_corr/med_Nir_corr,
            BG= med_Blue_corr/med_Green_corr,
