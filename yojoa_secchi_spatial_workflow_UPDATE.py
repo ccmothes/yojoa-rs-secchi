@@ -59,7 +59,7 @@ LAKE_YOJOA_COORDS = [
 
 # Date range
 START_DATE = "2018-01-01"  # LS8 launch — no handoff needed for LS8/9 to LS8/9
-END_DATE = "2026-01-01"
+END_DATE = "2026-05-01"
 
 # Path to XGBoost model exported from R with xgb.save()
 MODEL_PATH = "data/models/xgb_secchi_model_best.json"

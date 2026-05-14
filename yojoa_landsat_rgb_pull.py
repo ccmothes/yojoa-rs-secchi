@@ -44,7 +44,7 @@ LAKE_YOJOA_COORDS = [
 ]
 
 START_DATE = "2018-01-01"
-END_DATE   = "2026-01-01"
+END_DATE   = "2026-05-01"
 
 OUTPUT_DIR = "rgb_maps"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -65,7 +65,7 @@ FIXED_MAX = 0.12
 
 # Set to a path of existing secchi TIFs to only process matching scenes,
 # or None to process all scenes in the date range.
-SECCHI_DIR = "secchi_maps"   # set to None to ignore
+SECCHI_DIR = "secchi_maps_update"   # set to None to ignore
 
 
 # ============================================================================
